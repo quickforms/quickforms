@@ -205,7 +205,7 @@ function sendAJAX(current_form, formdata) {
         url: $(current_form).attr('action'),
         type: 'POST',
         data: formdata,
-        dataType: 'text',
+        dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,
@@ -223,7 +223,7 @@ function sendAJAX(current_form, formdata) {
             }
         },
         success: function (data) {
-            if (data === 'sucesso') {
+            if (data.status === 'success') {
                 delete formdata;
 
                 if (typeof checkVariableData(current_form, 'notification', 'modal') !== 'undefined') {
@@ -237,8 +237,7 @@ function sendAJAX(current_form, formdata) {
 
                 returnOfValues(current_form);
                 resetDataForm(current_form);
-            } else {
-                
+            } else {              
                 if (typeof checkVariableData(current_form, 'notification', 'modal') !== 'undefined') {
                     addHTML(checkData(current_form).modal_error, current_form);
                     $('#error-notification').modal();
