@@ -1,2 +1,1 @@
-# quickforms
-Bliblioteca de envio de formulario pronto.
+Informações em breve.
