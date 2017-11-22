@@ -1,0 +1,25 @@
+{
+  "name": "quickforms",
+  "description": "Form submission library with notifications",
+  "readmeFilename": "README.md" ,
+  "tags": [
+    "form",
+    "forms",
+	"quickform"
+  ],
+  "version": "1.0.0",
+  "author": {
+    "name": "Quickforms",
+    "email": "support@quickforms.com.br",
+    "homepage": "https://www.quickforms.com.br/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quickforms"
+  },
+  "dependencies":{
+    "bootstrap":"3.3.7",
+    "jquery":"3.2.1"
+  },
+  "license": "MIT"
+}
