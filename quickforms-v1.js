@@ -48,7 +48,7 @@ function verifyFormAttributes(current_form) {
     var method = $(current_form).attr('method');
     var action = $(current_form).attr('action');
     var class_form = $(current_form).attr('class').split(' ');
-    var button = $(current_form).find('button').attr('type');
+    var button = $(current_form).find('[type=submit]')[0];
     var all_warnings = '';
     var located = '';
     
@@ -62,11 +62,7 @@ function verifyFormAttributes(current_form) {
     }
 
     if (button === undefined) {
-        all_warnings += 'Seu formulário deve existir um botão do tipo <b>button</b> <br>';
-    }
-
-    if (button != 'submit') {
-        all_warnings += 'seu botao button deve ser do tipo <b>submit</b>.<br>';
+        all_warnings += 'No formulário deve existir um botão do tipo <b>submit</b> <br>';
     }
 
     $(class_form).each(function (index, value) {
@@ -165,16 +161,30 @@ function checkData(current_form) {
     };
 }
 
-function waitingSent(current_form) {
-    $(current_form).find('button[type="submit"]').text('Enviando...');
-    $(current_form).find('button[type="submit"]').css({opacity: 0.7});
-    $(current_form).find('button[type="submit"]').addClass("disabled");
+function check_tagHtml(current_form){
+    var check_tagHtml_submit = $(current_form).find('[type=submit]');
+    var return_tagHtml_submit = $(check_tagHtml_submit).prop("tagName");
+    return return_tagHtml_submit;
 }
 
-function returnOfValues(current_form) {
-    $(current_form).find('button[type="submit"]').text('Enviar mensagem');
-    $(current_form).find('button[type="submit"]').removeAttr('style');
-    $(current_form).find('button[type="submit"]').removeClass('disabled');
+function waitingSent(current_form) {   
+var response = check_tagHtml(current_form);    
+    if(response == 'INPUT'){
+        $(current_form).find('[type=submit]').val('Enviando...');
+    }
+    $(current_form).find('[type=submit]').text('Enviando...');
+    $(current_form).find('[type=submit]').css({opacity: 0.7});
+    $(current_form).find('[type=submit]').addClass("disabled");
+}
+
+function returnOfValues(current_form) { 
+    var response = check_tagHtml(current_form);
+    if(response == 'INPUT'){
+       $(current_form).find('[type=submit]').val('Enviar mensagem'); 
+    }  
+    $(current_form).find('[type=submit]').text('Enviar mensagem');
+    $(current_form).find('[type=submit]').removeAttr('style');
+    $(current_form).find('[type=submit]').removeClass('disabled');
 }
 
 function timeRemoveMessage(current_form) {
@@ -266,7 +276,7 @@ function sendAJAX(current_form, formdata) {
                             addHTML(checkData(current_form).progress_bar, current_form);
                             progress_bar++;
                         }
-                            $(current_form).find('button[type="submit"]').text('Enviando . . .');
+                            $(current_form).find('[type=submit]').text('Enviando . . .');
                                                 
                             $(current_form).find('.progress-bar').css({width: percentComplete+'%'});
                             $(current_form).find('.progress-bar').text(percentComplete + '%');
