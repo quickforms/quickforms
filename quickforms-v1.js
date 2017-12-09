@@ -1,16 +1,3 @@
-/*
- * Exemplo criando json e interando
- * var valorRetornado = '[{"id":"769","cidade":"minhacidade","estado":"PR"},{"id":"855","cidade":"Caram","estado":"PR"}]'
-        // convertendo a string em objeto
-        var obj = JSON.parse(valorRetornado);
-
-        obj.forEach(function(o, index){
-            console.log(o.cidade);
-        });
-    LINK: https://pt.stackoverflow.com/questions/120845/ler-e-manipular-dados-de-json-usando-jquery/120860
- */
-
-
 
 document.addEventListener("DOMContentLoaded", function (e) {
     
