@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
 var mensagem = {};
 mensagem.send = {
-    error: "Erro ao enviar mensagem! pelo send",
-    success: "Mensagem enviada com sucesso pelo send"
+    error: "Erro ao enviar mensagem!",
+    success: "Mensagem enviada com sucesso!"
 };
 mensagem.subscribe = {
     error: "Erro ao realizar cadastro em newsletter!",
