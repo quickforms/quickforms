@@ -161,6 +161,7 @@ var response = check_tagHtml(current_form);
     }
     $(current_form).find('[type=submit]').text('Enviando...');
     $(current_form).find('[type=submit]').css({opacity: 0.7});
+    $(current_form).find('[type=submit]').attr("disabled", "disabled");
     $(current_form).find('[type=submit]').addClass("disabled");
 }
 
@@ -171,6 +172,7 @@ function returnOfValues(current_form) {
     }  
     $(current_form).find('[type=submit]').text('Enviar mensagem');
     $(current_form).find('[type=submit]').removeAttr('style');
+    $(current_form).find('[type=submit]').removeAttr('disabled');
     $(current_form).find('[type=submit]').removeClass('disabled');
 }
 
