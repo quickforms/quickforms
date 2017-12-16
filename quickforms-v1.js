@@ -202,6 +202,7 @@ function sendAJAX(current_form, formdata) {
    var progress_bar = 1;
     $.ajax({
         url: $(current_form).attr('action'),
+        timeout: 8000,
         type: 'POST',
         data: formdata,
         dataType: 'json',
@@ -211,7 +212,32 @@ function sendAJAX(current_form, formdata) {
         beforeSend: function (xhr) {
             waitingSent(current_form);
         },
-        statusCode: {
+        error: function (jxhr, status, error) {
+            switch (jxhr.status) {
+                case 404:
+                  addHTML(checkData(current_form).warning , current_form);
+                  returnOfValues(current_form);
+                  timeRemoveMessage(current_form);
+                  resetDataForm(current_form);
+                  console.warn(' Não foi possível localizar endereço de envio de '
+                        + ' e-mail que foi informado no formulário:  ' + $(current_form).attr('action'));
+                    break;
+                case 408:
+                  returnOfValues(current_form);
+                      console.warn('Não obtivemos resposta do servidor' +
+                                        ' jxhr.status:'+ jxhr.status +'.' +
+                                            ' status:'+ status +'.' +
+                                            ' error:' + error +'.' ); 
+                break;
+                      default:
+                          returnOfValues(current_form);
+                           console.warn('Ocorreu algum erro desconhecido:' +
+                                        ' jxhr.status:'+ jxhr.status +'.' +
+                                            ' status:'+ status +'.' +
+                                            ' error:' + error +'.' ); 
+            }
+        },
+        /** statusCode: {
             404: function () {
                 addHTML(checkData(current_form).warning , current_form);
                 returnOfValues(current_form);
@@ -220,7 +246,7 @@ function sendAJAX(current_form, formdata) {
                 console.warn(' Não foi possível localizar endereço de envio de '
                         + ' e-mail que foi informado no formulário:  ' + $(current_form).attr('action'));
             }
-        },
+        }, **/
         success: function (data) {
             if (data.status === 'success') {
                 delete formdata;
