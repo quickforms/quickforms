@@ -154,23 +154,25 @@ function check_tagHtml(current_form){
     return return_tagHtml_submit;
 }
 
-function waitingSent(current_form) {   
-var response = check_tagHtml(current_form);    
-    if(response == 'INPUT'){
+function waitingSent(current_form) {
+    var response = check_tagHtml(current_form);
+    if (response == 'INPUT') {
         $(current_form).find('[type=submit]').val('Enviando...');
+    } else {
+        $(current_form).find('[type=submit]').text('Enviando...');
     }
-    $(current_form).find('[type=submit]').text('Enviando...');
     $(current_form).find('[type=submit]').css({opacity: 0.7});
     $(current_form).find('[type=submit]').attr("disabled", "disabled");
     $(current_form).find('[type=submit]').addClass("disabled");
 }
 
-function returnOfValues(current_form) { 
+function returnOfValues(current_form) {
     var response = check_tagHtml(current_form);
-    if(response == 'INPUT'){
-       $(current_form).find('[type=submit]').val('Enviar mensagem'); 
-    }  
-    $(current_form).find('[type=submit]').text('Enviar mensagem');
+    if (response == 'INPUT') {
+        $(current_form).find('[type=submit]').val('Enviar mensagem');
+    } else {
+        $(current_form).find('[type=submit]').text('Enviar mensagem');
+    }
     $(current_form).find('[type=submit]').removeAttr('style');
     $(current_form).find('[type=submit]').removeAttr('disabled');
     $(current_form).find('[type=submit]').removeClass('disabled');
@@ -197,12 +199,21 @@ function checkVariableData(current_form, data_variable, value) {
     }
 }
 
+function addMessage(message_type, message){
+    switch (message_type){
+         case 'warning':
+             var html = '<div class="clearfix"></div><div class="alert alert-warning" role="alert">'
+                        + message + '</div>';
+                return html;            
+             break;
+    }
+}
+
 function sendAJAX(current_form, formdata) {
    /* Verifica se já adicionou o progress_bar no DOM */
    var progress_bar = 1;
     $.ajax({
         url: $(current_form).attr('action'),
-        timeout: 8000,
         type: 'POST',
         data: formdata,
         dataType: 'json',
@@ -211,42 +222,27 @@ function sendAJAX(current_form, formdata) {
         processData: false,
         beforeSend: function (xhr) {
             waitingSent(current_form);
-        },
-        error: function (jxhr, status, error) {
-            switch (jxhr.status) {
-                case 404:
-                  addHTML(checkData(current_form).warning , current_form);
-                  returnOfValues(current_form);
-                  timeRemoveMessage(current_form);
-                  resetDataForm(current_form);
-                  console.warn(' Não foi possível localizar endereço de envio de '
-                        + ' e-mail que foi informado no formulário:  ' + $(current_form).attr('action'));
-                    break;
-                case 408:
-                  returnOfValues(current_form);
+        },      
+          statusCode: {
+            404: function () {
+            //  addHTML(checkData(current_form).warning , current_form);
+                addHTML(addMessage('warning', 'Não foi possível localizar endereço de envio de  e-mail'), current_form);
+                returnOfValues(current_form);
+                timeRemoveMessage(current_form);
+                console.warn(' Não foi possível localizar endereço de envio de '
+                      + ' e-mail que foi informado no formulário:  ' + $(current_form).attr('action'));
+            },
+            
+            408: function (jxhr,status,error) {
+            addHTML(addMessage('warning', 'Não obtivemos resposta do servidor!'), current_form);
+                      returnOfValues(current_form);
+                      timeRemoveMessage(current_form);
                       console.warn('Não obtivemos resposta do servidor' +
                                         ' jxhr.status:'+ jxhr.status +'.' +
                                             ' status:'+ status +'.' +
                                             ' error:' + error +'.' ); 
-                break;
-                      default:
-                          returnOfValues(current_form);
-                           console.warn('Ocorreu algum erro desconhecido:' +
-                                        ' jxhr.status:'+ jxhr.status +'.' +
-                                            ' status:'+ status +'.' +
-                                            ' error:' + error +'.' ); 
             }
         },
-        /** statusCode: {
-            404: function () {
-                addHTML(checkData(current_form).warning , current_form);
-                returnOfValues(current_form);
-                timeRemoveMessage(current_form);
-                resetDataForm(current_form);
-                console.warn(' Não foi possível localizar endereço de envio de '
-                        + ' e-mail que foi informado no formulário:  ' + $(current_form).attr('action'));
-            }
-        }, **/
         success: function (data) {
             if (data.status === 'success') {
                 delete formdata;
